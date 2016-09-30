@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MathModel
+namespace OpenCVTest2.MathModel
 {
-    public class Class1
-    {
-    }
+	public interface IColorFilter
+	{
+		bool Check(byte[] color);
+	}
 }
