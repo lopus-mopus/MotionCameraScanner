@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenCVTest2.MathModel
+namespace MathModel
 {
 	public interface IColorFilter
 	{

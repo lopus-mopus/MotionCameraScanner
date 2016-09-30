@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Emgu.CV;
 
-namespace OpenCVTest2.MathModel
+namespace MathModel
 {
 	public abstract class Pipette
 	{
