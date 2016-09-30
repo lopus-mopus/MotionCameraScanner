@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotionCameraScaner", "MotionCameraScaner\MotionCameraScaner.csproj", "{60F4C262-2DF3-452A-AC84-E262AD20649A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenCVTest2", "..\OpenCVTest2\OpenCVTest2.csproj", "{38BA014B-3B37-4D03-8AEC-7080928D051A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathModel", "MathModel\MathModel.csproj", "{093A2396-F2AB-4F55-96EB-E825BB781582}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{60F4C262-2DF3-452A-AC84-E262AD20649A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{60F4C262-2DF3-452A-AC84-E262AD20649A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{60F4C262-2DF3-452A-AC84-E262AD20649A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{60F4C262-2DF3-452A-AC84-E262AD20649A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{38BA014B-3B37-4D03-8AEC-7080928D051A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{38BA014B-3B37-4D03-8AEC-7080928D051A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{38BA014B-3B37-4D03-8AEC-7080928D051A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{38BA014B-3B37-4D03-8AEC-7080928D051A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{093A2396-F2AB-4F55-96EB-E825BB781582}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{093A2396-F2AB-4F55-96EB-E825BB781582}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{093A2396-F2AB-4F55-96EB-E825BB781582}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{093A2396-F2AB-4F55-96EB-E825BB781582}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
