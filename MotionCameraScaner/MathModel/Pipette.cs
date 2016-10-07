@@ -19,17 +19,15 @@ namespace MathModel
 		/// получить фильтр цвета из диапазона
 		/// </summary>
 		/// <param name="image">изображение, с которого получается цвет</param>
-		/// <param name="x">координата x</param>
-		/// <param name="y">координата у</param>
+		/// <param name="point">координата пипетки</param>
 		/// <returns>фильтр цвета</returns>
-		public abstract IntensivityColorFilter GetColorFilter(Mat image, int x, int y);
+		public abstract IntensivityColorFilter GetColorFilter(Mat image, Point point);
 
 		/// <summary>
 		/// рисует пипетку в указанном месте на изображении
 		/// </summary>
 		/// <param name="image">изображение</param>
-		/// <param name="x">координата x</param>
-		/// <param name="y">координата у</param>
-		public abstract void DrawPipette(Mat image, int x, int y);
+		/// <param name="point">координата пипетки</param>
+		public abstract void DrawPipette(Mat image, Point point);
 	}
 }

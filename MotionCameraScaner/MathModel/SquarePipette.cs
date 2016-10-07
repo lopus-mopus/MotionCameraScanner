@@ -10,26 +10,26 @@ namespace MathModel
 {
 	public class SquarePipette : Pipette
 	{
-		public override void DrawPipette(Mat image, int x, int y)
+		public override void DrawPipette(Mat image, Point point)
 		{
 			byte[] color = new byte[] { 0, 0, 0 };
 			for (int i = 0; i < Size; ++i) {
-				image.SetPixel(y, x + i, ref color);
-				image.SetPixel(y + Size, x + i, ref color);
-				image.SetPixel(y + i, x, ref color);
-				image.SetPixel(y + i, x + Size, ref color);
+				image.SetPixel(point.Y, point.X + i, ref color);
+				image.SetPixel(point.Y + Size, point.X + i, ref color);
+				image.SetPixel(point.Y + i, point.X, ref color);
+				image.SetPixel(point.Y + i, point.X + Size, ref color);
 			}
 		}
 
-		public override IntensivityColorFilter GetColorFilter(Mat image, int x, int y)
+		public override IntensivityColorFilter GetColorFilter(Mat image, Point point)
 		{
 			IntensivityColorFilter res = new IntensivityColorFilter();
 			int n = 0;
 			for (int i=0;i<Size;++i){
 				for(int j = 0; j < Size; ++j) {
 					// получаем цвет
-					if (x + i >= image.Width || y + j >= image.Height) continue;
-					var color = image.GetPixel(y + j, x + i);
+					if (point.X + i >= image.Width || point.Y + j >= image.Height) continue;
+					var color = image.GetPixel(point.Y + j, point.X + i);
 					// получаем номер пикселя
 					++n;
 					// анализируем первый пиксель

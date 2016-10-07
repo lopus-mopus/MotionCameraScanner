@@ -24,14 +24,26 @@ namespace MathModel
 		/// цветовой фильтр пикселей
 		/// </summary>
 		public IntensivityColorFilter IntensivityColorFilter { get; set; } = IntensivityColorFilter.All;
+		ColorFilterList _colorFilter;
 		/// <summary>
 		/// составной фильтр пикселей
 		/// </summary>
-		public ColorFilterList colorFilter { get; set; } = new ColorFilterList();
+		public ColorFilterList ColorFilter
+		{
+			get
+			{
+				if (_colorFilter == null) _colorFilter = new ColorFilterList();
+				return _colorFilter;
+			}
+			set
+			{
+				_colorFilter = value;
+			}
+		}
 		/// <summary>
 		/// пипетка для выбора цвета
 		/// </summary>
-		public SquarePipette pipette = new SquarePipette { Size = 35 };
+		public SquarePipette pipette = new SquarePipette { Size = 15 };
 		/// <summary>
 		/// параметры алгоритма поиска контуров
 		/// </summary>
@@ -44,17 +56,22 @@ namespace MathModel
 		/// нужно ли суммировать фильтр
 		/// </summary>
 		public bool SummFilter { get; set; }
-
-		bool getFilter;	// нужно взять фильтр с пипетки
-		int mX = -1;	// 
-		int mY = -1;		
+	
+		/// <summary>
+		/// кликнули на пипетку
+		/// </summary>
+		public bool PipetteClick { get; set; }
+		/// <summary>
+		/// где сейчас находится пипетка
+		/// </summary>
+		public Point? PipettePosition { get; set; }
 
 		/// <summary>
 		/// создает сканнер камеры
 		/// </summary>
 		public CameraScanner()
 		{
-			colorFilter.Add(IntensivityColorFilter);
+			ColorFilter.Add(IntensivityColorFilter);
 		}
 
 		/// <summary>
@@ -69,10 +86,15 @@ namespace MathModel
 			CvInvoke.GaussianBlur(image, image, new Size(7, 7), 100);
 
 			// берем фильтр с пипетки
-			if (getFilter) {
-				if (!SummFilter || IntensivityColorFilter == null) IntensivityColorFilter = pipette.GetColorFilter(image, mX, mY);
-				else IntensivityColorFilter.Extend(pipette.GetColorFilter(image, mX, mY));
-				getFilter = false;
+			if (PipetteClick && PipettePosition != null) {
+				if (!SummFilter || IntensivityColorFilter == null) {
+					IntensivityColorFilter = pipette.GetColorFilter(image, PipettePosition.Value);
+					ColorFilter.Clear();
+					ColorFilter.Add(IntensivityColorFilter);
+					SummFilter = true;
+				}
+				else IntensivityColorFilter.Extend(pipette.GetColorFilter(image, PipettePosition.Value));
+				PipetteClick = false;
 			}
 
 			// определяем цвет
@@ -92,7 +114,7 @@ namespace MathModel
 					// проверяем границу
 
 
-					if (colorFilter.Check(pixel2)) {
+					if (ColorFilter.Check(pixel2)) {
 						color[0] = pixel2[0];
 						color[1] = pixel2[1];
 						color[2] = pixel2[2];
@@ -135,8 +157,25 @@ namespace MathModel
 				}
 			}
 
-			// вывод макс контура
-			if (largest_contour_index >= 0) CvInvoke.DrawContours(image, contours, largest_contour_index, new MCvScalar(255, 255, 0));
+			// обработка макс контура
+			if (largest_contour_index >= 0) {
+				// вывод контура
+				CvInvoke.DrawContours(image, contours, largest_contour_index, new MCvScalar(255, 255, 0));
+				// поиск позиции контура
+				Point[] pts = contours[largest_contour_index].ToArray();
+				Point average = new Point(0, 0);
+				int pointCount = 0;
+				foreach (Point p in pts) {
+					average.X += p.X;
+					average.Y += p.Y;
+					++pointCount;
+				}
+				average.X /= pointCount;
+				average.Y /= pointCount;
+				// вывод полученой точки
+				OnGetPoint(average);
+				pipette.DrawPipette(image, average);
+			}
 
 			// вывод всех контуров
 			//CvInvoke.DrawContours(image, contours, -1, new MCvScalar(255, 255, 0));
@@ -150,9 +189,9 @@ namespace MathModel
 			// даем поправку на знак угла поворота y
 
 			// рисуем контур пипетки
-			pipette.DrawPipette(image, mX, mY);
+			if (PipettePosition != null) pipette.DrawPipette(image, PipettePosition.Value);
 
-			//Вставляем в imageBox
+			// Вставляем в imageBox
 			OnDrawImage(image);
 			OnDrawGrayImage(grayImage);
 		}
@@ -178,14 +217,22 @@ namespace MathModel
 		/// вывод серого изображения
 		/// </summary>
 		public event EventHandler<Image<Gray, byte>> DrawGrayImage;
+		/// <summary>
+		/// когда обнаружена позиция контура
+		/// </summary>
+		public event EventHandler<Point> GetPoint;
 
-		public void OnDrawImage(Mat image)
+		void OnDrawImage(Mat image)
 		{
 			if (DrawImage != null) DrawImage(this, image);
 		}
-		public void OnDrawGrayImage(Image<Gray, byte> image)
+		void OnDrawGrayImage(Image<Gray, byte> image)
 		{
 			if (DrawGrayImage != null) DrawGrayImage(this, image);
+		}
+		void OnGetPoint(Point point)
+		{
+			if (GetPoint != null) GetPoint(this, point);
 		}
 	}
 }
