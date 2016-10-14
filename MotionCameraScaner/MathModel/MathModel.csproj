@@ -71,7 +71,6 @@
   <ItemGroup>
     <Compile Include="CameraScanner.cs" />
     <Compile Include="CannyParameters.cs" />
-    <Compile Include="ColorFilterList.cs" />
     <Compile Include="IColorFilter.cs" />
     <Compile Include="IntensivityColorFilter.cs" />
     <Compile Include="IntensivityRange.cs" />

@@ -4,12 +4,14 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace MathModel
 {
 	/// <summary>
 	/// фильтр цвета по интенсивностям
 	/// </summary>
+	[Serializable, XmlRoot]
 	public class IntensivityColorFilter: IColorFilter
 	{
         /// <summary>
@@ -49,5 +51,13 @@ namespace MathModel
             G.Extend(other.G);
             B.Extend(other.B);
         }
-    }
+
+		public string Serialize()
+		{
+			var serializer = new XmlSerializer(typeof(IntensivityColorFilter));
+			var writer = new System.IO.StringWriter();
+			serializer.Serialize(writer, this);
+			return writer.GetStringBuilder().ToString();
+        }
+	}
 }

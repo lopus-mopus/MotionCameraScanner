@@ -24,34 +24,19 @@ namespace MathModel
 		/// цветовой фильтр пикселей
 		/// </summary>
 		public IntensivityColorFilter IntensivityColorFilter { get; set; } = IntensivityColorFilter.All;
-		ColorFilterList _colorFilter;
-		/// <summary>
-		/// составной фильтр пикселей
-		/// </summary>
-		public ColorFilterList ColorFilter
-		{
-			get
-			{
-				if (_colorFilter == null) _colorFilter = new ColorFilterList();
-				return _colorFilter;
-			}
-			set
-			{
-				_colorFilter = value;
-			}
-		}
+
 		/// <summary>
 		/// пипетка для выбора цвета
 		/// </summary>
-		public SquarePipette pipette = new SquarePipette { Size = 15 };
+		public SquarePipette Pipette = new SquarePipette { Size = 15 };
 		/// <summary>
 		/// параметры алгоритма поиска контуров
 		/// </summary>
-		public CannyParameters cannuParameters = new CannyParameters { Tresh = 100, TreshLinking = 1 };
+		public CannyParameters CannyParameters = new CannyParameters { Tresh = 100, TreshLinking = 1 };
 		/// <summary>
 		/// текущее изображение в оперативной памяти
 		/// </summary>
-		public Mat image { get; private set; }
+		public Mat Image { get; private set; }
 		/// <summary>
 		/// нужно ли суммировать фильтр
 		/// </summary>
@@ -67,33 +52,26 @@ namespace MathModel
 		public Point? PipettePosition { get; set; }
 
 		/// <summary>
-		/// создает сканнер камеры
-		/// </summary>
-		public CameraScanner()
-		{
-			ColorFilter.Add(IntensivityColorFilter);
-		}
-
-		/// <summary>
 		/// производит один аналитический цикл
 		/// </summary>
 		public void Update()
 		{
 			// Берем кадр
-			image = capture.QuerySmallFrame();
+			Image = capture.QuerySmallFrame();
+
+			// обработка ошибок кадра
+			if (Image == null) throw new Exception("Не удалось получить изображение - возможно отсутствует камера");
 
 			// убираем шумы (размываем)
-			CvInvoke.GaussianBlur(image, image, new Size(7, 7), 100);
+			CvInvoke.GaussianBlur(Image, Image, new Size(7, 7), 100);
 
 			// берем фильтр с пипетки
 			if (PipetteClick && PipettePosition != null) {
 				if (!SummFilter || IntensivityColorFilter == null) {
-					IntensivityColorFilter = pipette.GetColorFilter(image, PipettePosition.Value);
-					ColorFilter.Clear();
-					ColorFilter.Add(IntensivityColorFilter);
+					IntensivityColorFilter = Pipette.GetColorFilter(Image, PipettePosition.Value);
 					SummFilter = true;
 				}
-				else IntensivityColorFilter.Extend(pipette.GetColorFilter(image, PipettePosition.Value));
+				else IntensivityColorFilter.Extend(Pipette.GetColorFilter(Image, PipettePosition.Value));
 				PipetteClick = false;
 			}
 
@@ -102,19 +80,19 @@ namespace MathModel
 			byte[] pixel1 = new byte[3];
 			byte[] pixel2 = new byte[3];
 			byte[] color = new byte[3];
-			image.GetPixel(0, 0, ref pixel0);
-			image.GetPixel(0, 1, ref pixel1);
-			for (int i = 0; i < image.Width; ++i)
-				for (int j = 0; j < image.Height; ++j) {
+			Image.GetPixel(0, 0, ref pixel0);
+			Image.GetPixel(0, 1, ref pixel1);
+			for (int i = 0; i < Image.Width; ++i)
+				for (int j = 0; j < Image.Height; ++j) {
 					//image.SetPixel(j, i, Color.FromArgb(128, 0, 0));
 					//image.SetPixel(j, i, image.GetPixel(j, i));
 
-					image.GetPixel(j, i, ref pixel2);
+					Image.GetPixel(j, i, ref pixel2);
 
 					// проверяем границу
 
 
-					if (ColorFilter.Check(pixel2)) {
+					if (IntensivityColorFilter.Check(pixel2)) {
 						color[0] = pixel2[0];
 						color[1] = pixel2[1];
 						color[2] = pixel2[2];
@@ -125,7 +103,7 @@ namespace MathModel
 						color[2] = 255;
 					}
 
-					image.SetPixel(j, i, ref color);
+					Image.SetPixel(j, i, ref color);
 					pixel0[0] = pixel1[0];
 					pixel0[1] = pixel1[1];
 					pixel0[2] = pixel1[2];
@@ -138,8 +116,8 @@ namespace MathModel
 			//CvInvoke.CvtColor(image, image, ColorConversion.Rgb2Gray);
 
 			// получаем двоичные данные картинки
-			var grayImage = new Image<Gray, byte>(image.Bitmap);
-			grayImage = grayImage.Canny(cannuParameters.Tresh, cannuParameters.TreshLinking);
+			var grayImage = new Image<Gray, byte>(Image.Bitmap);
+			grayImage = grayImage.Canny(CannyParameters.Tresh, CannyParameters.TreshLinking);
 			//grayImage = grayImage.ThresholdBinary(new Gray(128), new Gray(255));
 
 			// ищем контуры
@@ -160,7 +138,7 @@ namespace MathModel
 			// обработка макс контура
 			if (largest_contour_index >= 0) {
 				// вывод контура
-				CvInvoke.DrawContours(image, contours, largest_contour_index, new MCvScalar(255, 255, 0));
+				CvInvoke.DrawContours(Image, contours, largest_contour_index, new MCvScalar(255, 255, 0));
 				// поиск позиции контура
 				Point[] pts = contours[largest_contour_index].ToArray();
 				Point average = new Point(0, 0);
@@ -174,7 +152,7 @@ namespace MathModel
 				average.Y /= pointCount;
 				// вывод полученой точки
 				OnGetPoint(average);
-				pipette.DrawPipette(image, average);
+				Pipette.DrawPipette(Image, average);
 			}
 
 			// вывод всех контуров
@@ -189,10 +167,10 @@ namespace MathModel
 			// даем поправку на знак угла поворота y
 
 			// рисуем контур пипетки
-			if (PipettePosition != null) pipette.DrawPipette(image, PipettePosition.Value);
+			if (PipettePosition != null) Pipette.DrawPipette(Image, PipettePosition.Value);
 
 			// Вставляем в imageBox
-			OnDrawImage(image);
+			OnDrawImage(Image);
 			OnDrawGrayImage(grayImage);
 		}
 

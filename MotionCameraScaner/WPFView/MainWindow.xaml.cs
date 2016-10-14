@@ -80,5 +80,18 @@ namespace WPFView
 			Scanner.PipettePosition = new System.Drawing.Point((int)p.X, (int)p.Y);
 			Scanner.PipetteClick = true;
 		}
+
+		private void MenuItem_Click(object sender, RoutedEventArgs e)
+		{
+			// получаем имя файла
+			var dialog = new System.Windows.Forms.SaveFileDialog();
+			dialog.Filter = "Файлы XML|*.xml";
+			if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+			// сохраняем в файл
+			string str = Scanner.IntensivityColorFilter.Serialize();
+			System.IO.StreamWriter file = new System.IO.StreamWriter(dialog.FileName);
+			file.WriteLine(str);
+			file.Close();
+		}
 	}
 }

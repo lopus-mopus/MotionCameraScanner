@@ -7,7 +7,19 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="840">
     <Grid>
-        <Image x:Name="image" HorizontalAlignment="Left" Height="100" Margin="10,10,0,0" VerticalAlignment="Top" Width="100" MouseMove="image_MouseMove" MouseDown="image_MouseDown"/>
-        <Image x:Name="image1" HorizontalAlignment="Left" Height="100" Margin="396,10,0,0" VerticalAlignment="Top" Width="100"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+			<RowDefinition/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0">
+            <MenuItem Header="Файл">
+                <MenuItem Header="Фильтр цвета">
+                    <MenuItem Header="Сохранить" Click="MenuItem_Click"/>
+                    <MenuItem Header="Загрузить"/>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+        <Image Grid.Row="1"  x:Name="image" HorizontalAlignment="Left" Height="100" Margin="10,10,0,0" VerticalAlignment="Top" Width="100" MouseMove="image_MouseMove" MouseDown="image_MouseDown"/>
+        <Image Grid.Row="1"  x:Name="image1" HorizontalAlignment="Left" Height="100" Margin="396,10,0,0" VerticalAlignment="Top" Width="100"/>
     </Grid>
 </Window>

@@ -3,15 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace MathModel
 {
 	/// <summary>
 	/// диапазон интенсивности
 	/// </summary>
+	[Serializable, XmlRoot]
 	public class IntensivityRange
 	{
+		[XmlAttribute]
 		public byte Min { get; set; }
+		[XmlAttribute]
 		public byte Max { get; set; }
 
 		public IntensivityRange()
