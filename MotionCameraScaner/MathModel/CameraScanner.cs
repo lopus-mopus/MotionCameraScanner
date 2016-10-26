@@ -186,18 +186,19 @@ namespace MathModel
 			return Math.Abs(a - b) > b * 0.09;// && Math.Abs(b - a) > a * 0.2;
 		}
 
+		public delegate void EventDelegate<ArgType>(object sender, ArgType arg);
 		/// <summary>
 		/// ввызывается, когда нужно вывести изображение
 		/// </summary>
-		public event EventHandler<Mat> DrawImage;
+		public event EventDelegate<Mat> DrawImage;
 		/// <summary>
 		/// вывод серого изображения
 		/// </summary>
-		public event EventHandler<Image<Gray, byte>> DrawGrayImage;
+		public event EventDelegate<Image<Gray, byte>> DrawGrayImage;
 		/// <summary>
 		/// когда обнаружена позиция контура
 		/// </summary>
-		public event EventHandler<Point> GetPoint;
+		public event EventDelegate<Point> GetPoint;
 
 		void OnDrawImage(Mat image)
 		{
