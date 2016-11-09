@@ -15,7 +15,7 @@
             <MenuItem Header="Файл">
                 <MenuItem Header="Фильтр цвета">
                     <MenuItem Header="Сохранить" Click="MenuItem_Click"/>
-                    <MenuItem Header="Загрузить"/>
+                    <MenuItem Header="Загрузить" Click="MenuItem_Click_1"/>
                 </MenuItem>
             </MenuItem>
         </Menu>

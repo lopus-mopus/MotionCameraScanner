@@ -87,10 +87,17 @@ namespace WPFView
 			dialog.Filter = "Файлы XML|*.xml";
 			if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
 			// сохраняем в файл
-			string str = Scanner.IntensivityColorFilter.Serialize();
-			System.IO.StreamWriter file = new System.IO.StreamWriter(dialog.FileName);
-			file.WriteLine(str);
-			file.Close();
+			Scanner.IntensivityColorFilter.SaveToFile(dialog.FileName);
+		}
+
+		private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+		{
+			// получаем имя файла
+			var dialog = new System.Windows.Forms.OpenFileDialog();
+			dialog.Filter = "Файлы XML|*.xml";
+			if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+			// читаем файл
+			Scanner.IntensivityColorFilter = IntensivityColorFilter.Load(dialog.FileName);
 		}
 	}
 }

@@ -58,5 +58,23 @@ namespace MathModel
 			serializer.Serialize(writer, this);
 			return writer.GetStringBuilder().ToString();
         }
+		public void SaveToFile(string fileName)
+		{
+			string str = Serialize();
+			System.IO.StreamWriter file = new System.IO.StreamWriter(fileName);
+			file.WriteLine(str);
+			file.Close();
+		}
+		public static IntensivityColorFilter Deserialize(string str)
+		{
+			var serializer = new XmlSerializer(typeof(IntensivityColorFilter));
+			var reader = new System.IO.StringReader(str);
+			return (IntensivityColorFilter)serializer.Deserialize(reader);
+		}
+		public static IntensivityColorFilter Load(string fileName)
+		{
+			var file = new System.IO.StreamReader(fileName);
+			return Deserialize(file.ReadToEnd());
+		}
 	}
 }
